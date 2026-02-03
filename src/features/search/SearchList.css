@@ -1,0 +1,69 @@
+.cars-grid.list-view {
+  display: block;
+}
+
+.list-new-button {
+  background: black;
+  color: #FFD700;
+  border: 1px solid #FFD700;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.list-new-button:hover {
+  background: #333;
+}
+
+.list-view .car-list-item {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 0;
+  border: 1px solid #FFD700;
+}
+
+.list-view .car-list-item:first-child {
+  border-top: 1px solid #FFD700;
+}
+
+.list-view .car-list-cell {
+  padding: 0.5rem 0.75rem;
+  border-right: 1px solid #FFD700;
+  border-bottom: 1px solid #FFD700;
+  font-size: 0.875rem;
+  color: var(--text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.list-view .car-list-cell:last-child {
+  border-right: none;
+}
+
+.list-view .car-list-item:hover .car-list-cell {
+  background-color: var(--hover-color);
+}
+
+/* Header row styling */
+.list-view .car-list-header {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 0;
+  border: 1px solid #FFD700;
+  background-color: black;
+  font-weight: 600;
+}
+
+.list-view .car-list-header .car-list-header-cell {
+  padding: 0.5rem 0.75rem;
+  border-right: 1px solid #FFD700;
+  border-bottom: 1px solid #FFD700;
+  font-size: 0.875rem;
+  color: #FFD700;
+}
+
+.list-view .car-list-header .car-list-header-cell:last-child {
+  border-right: none;
+}

@@ -1,0 +1,76 @@
+.top-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  background: var(--background-color);
+  border-bottom: 2px solid var(--primary-color);
+  z-index: 2000;
+  transform: translateY(-100%);
+  transition: transform 300ms ease-in-out;
+}
+
+.top-menu-open {
+  transform: translateY(0);
+}
+
+.top-menu-content {
+  padding: 2rem;
+}
+
+.top-menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.top-menu-title {
+  color: var(--primary-color);
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.top-menu-close {
+  background: transparent;
+  border: 2px solid var(--primary-color);
+  color: var(--text-color);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+
+.top-menu-close:hover {
+  background: var(--primary-color);
+  color: var(--background-color);
+}
+
+.top-menu-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.top-menu-item {
+  background: transparent;
+  border: none;
+  color: var(--text-color);
+  padding: 1rem 2rem;
+  cursor: pointer;
+  font-size: 1.1rem;
+  text-align: left;
+  transition: background 0.3s;
+  width: 100%;
+}
+
+.top-menu-item:hover {
+  background: var(--primary-color);
+  color: var(--background-color);
+}

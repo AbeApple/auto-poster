@@ -1,0 +1,94 @@
+.auth-box {
+  background: var(--background-color);
+  border: 2px solid var(--primary-color);
+  border-radius: 8px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.auth-box h2 {
+  color: var(--primary-color);
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.auth-box .form-group {
+  margin-bottom: 1rem;
+}
+
+.auth-box label {
+  display: block;
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.auth-box input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid var(--primary-color);
+  border-radius: 4px;
+  background: var(--background-color);
+  color: var(--text-color);
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.auth-box input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.3);
+}
+
+.auth-box button[type="submit"] {
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--primary-color);
+  color: var(--background-color);
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background 0.3s;
+}
+
+.auth-box button[type="submit"]:hover:not(:disabled) {
+  background: #e6c200;
+}
+
+.auth-box button[type="submit"]:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.auth-box .switch-button {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 1rem;
+}
+
+.auth-box .switch-button:hover {
+  color: #e6c200;
+}
+
+.auth-box .error {
+  color: #ff4444;
+  margin: 1rem 0;
+  padding: 0.5rem;
+  border: 1px solid #ff4444;
+  border-radius: 4px;
+  background: rgba(255, 68, 68, 0.1);
+}
+
+.auth-box p {
+  color: var(--text-color);
+  text-align: center;
+  margin-top: 1rem;
+}
