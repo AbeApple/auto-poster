@@ -5,6 +5,7 @@ import { supabase } from '../../global/supabase/Client';
 import AutoSaveInput from '../../util/AutoSaveInput';
 import Confirm from '../../util/Confirm';
 import ImageSourceDialog from '../../util/ImageSourceDialog';
+import JSZip from 'jszip';
 import './ItemDisplay.css';
 
 const ItemDisplay = () => {
@@ -94,6 +95,49 @@ const ItemDisplay = () => {
   const handleAddImages = () => {
     console.log('ItemDisplay: Opening image source dialog for car:', selectedCarData?.id);
     setShowImageSourceDialog(true);
+  };
+
+  const handleDownloadImages = async () => {
+    if (!car || !car.images || car.images.length === 0) {
+      console.log('ItemDisplay: No images to download');
+      return;
+    }
+
+    console.log('ItemDisplay: Downloading images for car:', car.registration);
+    const zip = new JSZip();
+    const folderName = car.registration || 'car-images';
+    const folder = zip.folder(folderName);
+
+    try {
+      // Download all images and add to zip
+      const downloadPromises = car.images.map(async (imageUrl) => {
+        try {
+          const response = await fetch(imageUrl);
+          const blob = await response.blob();
+          const fileName = imageUrl.split('/').pop();
+          folder.file(fileName, blob);
+        } catch (error) {
+          console.error('ItemDisplay: Error downloading image:', error);
+        }
+      });
+
+      await Promise.all(downloadPromises);
+
+      // Generate zip file
+      const content = await zip.generateAsync({ type: 'blob' });
+      const url = URL.createObjectURL(content);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${folderName}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      console.log('ItemDisplay: Images downloaded successfully');
+    } catch (error) {
+      console.error('ItemDisplay: Error downloading images:', error);
+    }
   };
 
   const handleImageSourceUpload = () => {
@@ -213,7 +257,24 @@ const ItemDisplay = () => {
           <div className="item-display-body">
             <div className="item-display-images">
               <div className="images-header">
-                <h3>Images</h3>
+                {/* <h3>Images</h3> */}
+                <button className="add-images-button" onClick={handleDownloadImages} disabled={!car.images || car.images.length === 0}>
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                  Download Images
+                </button>
                 <button className="add-images-button" onClick={handleAddImages}>
                   <svg
                     width="20"
