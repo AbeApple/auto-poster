@@ -51,6 +51,7 @@ const Search = () => {
   const handleSearch = async (e) => {
     e.preventDefault();
     console.log('Search: Performing search for', searchTerm);
+    setLoading(true);
     
     if (!searchTerm.trim()) {
       await loadCars();
@@ -60,7 +61,7 @@ const Search = () => {
     const { data, error } = await supabase
       .from('cars')
       .select('*')
-      .or(`make.ilike.%${searchTerm}%,registration.ilike.%${searchTerm}%`)
+      .or(`make.ilike.%${searchTerm}%,registration.ilike.%${searchTerm}%,model.ilike.%${searchTerm}%`)
       .order('created_at', { ascending: false });
     
     if (error) {
@@ -71,6 +72,7 @@ const Search = () => {
     }
     setPageStart(0);
     setPageEnd(19);
+    setLoading(false);
   };
 
   const handleNewTile = () => {
@@ -228,8 +230,22 @@ const Search = () => {
         />
       </div>
 
-      {loading && <div className="search-loading">Loading...</div>}
-      {downloading && <div className="search-loading">Downloading...</div>}
+      {loading && (
+        <div className="auto-login">
+          <div className="auto-login-content">
+            <div className="loading-spinner"></div>
+            <p>Loading...</p>
+          </div>
+        </div>
+      )}
+      {downloading && (
+        <div className="auto-login">
+          <div className="auto-login-content">
+            <div className="loading-spinner"></div>
+            <p>Downloading...</p>
+          </div>
+        </div>
+      )}
 
       <div className={`cars-grid ${viewMode === 'list' ? 'list-view' : ''}`}>
         {viewMode === 'list' && (
@@ -258,23 +274,33 @@ const Search = () => {
           </div>
         )}
         {viewMode === 'list' && (
-          <div className="car-list-header">
-            <div className="car-list-header-cell">Reg #</div>
-            <div className="car-list-header-cell">Price</div>
-            <div className="car-list-header-cell">Make</div>
-            <div className="car-list-header-cell">Model</div>
-            <div className="car-list-header-cell">Year</div>
-            <div className="car-list-header-cell">Miles</div>
-            <div className="car-list-header-cell">Color</div>
-            <div className="car-list-header-cell">Note</div>
+          <div className="list-view-container list-view">
+            <div className="car-list-header">
+              <div className="car-list-header-cell">Reg #</div>
+              <div className="car-list-header-cell">Price</div>
+              <div className="car-list-header-cell">Make</div>
+              <div className="car-list-header-cell">Model</div>
+              <div className="car-list-header-cell">Year</div>
+              <div className="car-list-header-cell">Miles</div>
+              <div className="car-list-header-cell">Color</div>
+              <div className="car-list-header-cell">Note</div>
+            </div>
+            {cars.slice(pageStart, pageEnd).map((car) =>
+              <div key={car.id} className="car-list-item">
+                <div className="car-list-cell">{car.registration || '-'}</div>
+                <div className="car-list-cell">{car.price ? `$${car.price}` : '-'}</div>
+                <div className="car-list-cell">{car.make || '-'}</div>
+                <div className="car-list-cell">{car.model || '-'}</div>
+                <div className="car-list-cell">{car.year || '-'}</div>
+                <div className="car-list-cell">{car.miles ? `${car.miles}` : '-'}</div>
+                <div className="car-list-cell">{car.color || '-'}</div>
+                <div className="car-list-cell">{car.note || '-'}</div>
+              </div>
+            )}
           </div>
         )}
-        {cars.slice(pageStart, pageEnd).map((car) =>
-          viewMode === 'tile' ? (
-            <SearchTile key={car.id} car={car} />
-          ) : (
-            <SearchList key={car.id} car={car} />
-          )
+        {viewMode !== 'list' && cars.slice(pageStart, pageEnd).map((car) =>
+          <SearchTile key={car.id} car={car} />
         )}
       </div>
 

@@ -120,9 +120,11 @@ so we would have a zip or somehting that can be used on mac and its CarImages/<r
 when the download exporet button is cliecke it opens a dialogue box like the confirm indow tha asks the user wha thtey want to downlaod, all data, all images, search result images, search result data. 
 when they clicke the button there is a message that says downlaodthing then it dow download
 
-optional:
-
 7:
 list view
 the toggle under search has a list view instead of the tile view. shows like a csv spreadsheet
 
+8 finish
+put on render.com
+create account for them
+send to guy

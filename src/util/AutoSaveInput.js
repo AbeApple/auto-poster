@@ -42,7 +42,7 @@ const AutoSaveInput = ({
   return type === 'textarea' ? (
     <textarea
       id={id}
-      value={localValue}
+      defaultValue={localValue}
       onChange={handleChange}
       placeholder={placeholder}
       className={className}
@@ -53,7 +53,7 @@ const AutoSaveInput = ({
     <input
       type={type}
       id={id}
-      value={localValue}
+      defaultValue={localValue}
       onChange={handleChange}
       placeholder={placeholder}
       className={className}

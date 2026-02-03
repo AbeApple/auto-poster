@@ -1,5 +1,12 @@
 .cars-grid.list-view {
   display: block;
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+}
+
+.list-view-container {
+  min-width: 800px;
 }
 
 .list-new-button {
@@ -18,7 +25,7 @@
 
 .list-view .car-list-item {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
+  grid-template-columns: repeat(8, minmax(100px, 1fr));
   gap: 0;
   border: 1px solid #FFD700;
 }
@@ -49,7 +56,7 @@
 /* Header row styling */
 .list-view .car-list-header {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
+  grid-template-columns: repeat(8, minmax(100px, 1fr));
   gap: 0;
   border: 1px solid #FFD700;
   background-color: black;
