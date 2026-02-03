@@ -1,14 +1,98 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setAddingImagesToCarId, triggerRefresh, setSelectedCarData } from '../../global/redux/slices/DisplaySlice';
+import { setAddingImagesToCarId, triggerRefresh } from '../../global/redux/slices/DisplaySlice';
 import Camera from '../../util/Camera';
 import { supabase } from '../../global/supabase/Client';
 import './AddImages.css';
 
 const AddImages = () => {
   const addingImagesToCarId = useSelector(state => state.display.addingImagesToCarId);
+  const imageSourceMode = useSelector(state => state.display.imageSourceMode);
   const user = useSelector(state => state.user.user);
   const dispatch = useDispatch();
+  const [uploading, setUploading] = useState(false);
+
+  console.log('AddImages: imageSourceMode =', imageSourceMode, 'addingImagesToCarId =', addingImagesToCarId);
+
+  const mode = imageSourceMode || 'camera';
+
+  const handleFileUpload = async (e) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    console.log('AddImages: Processing file upload:', files.length, 'files');
+    setUploading(true);
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      await uploadImage(file);
+    }
+
+    setUploading(false);
+    dispatch(setAddingImagesToCarId(null));
+    dispatch(triggerRefresh());
+  };
+
+  const uploadImage = async (file) => {
+    if (!addingImagesToCarId || !user?.id) {
+      console.error('AddImages: Missing carId or userId');
+      return;
+    }
+
+    try {
+      const fileName = `image-${Date.now()}.${file.name.split('.').pop()}`;
+      const filePath = `${user.id}/${addingImagesToCarId}/${fileName}`;
+      
+      console.log('AddImages: Uploading file to path:', filePath);
+      
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('car-images')
+        .upload(filePath, file);
+
+      if (uploadError) {
+        console.error('AddImages: Error uploading file', uploadError);
+        return;
+      }
+
+      console.log('AddImages: File uploaded successfully', uploadData);
+
+      const { data: urlData } = supabase.storage
+        .from('car-images')
+        .getPublicUrl(filePath);
+
+      console.log('AddImages: File public URL:', urlData.publicUrl);
+
+      const { data: existingCar, error: fetchError } = await supabase
+        .from('cars')
+        .select('images')
+        .eq('id', addingImagesToCarId)
+        .single();
+
+      if (fetchError) {
+        console.error('AddImages: Error fetching car data', fetchError);
+        return;
+      }
+
+      const existingImages = existingCar?.images || [];
+      const updatedImages = [urlData.publicUrl, ...existingImages];
+
+      console.log('AddImages: Updating car with images. Existing:', existingImages, 'New total:', updatedImages.length);
+
+      const { data: updateData, error: updateError } = await supabase
+        .from('cars')
+        .update({ images: updatedImages })
+        .eq('id', addingImagesToCarId)
+        .select();
+
+      if (updateError) {
+        console.error('AddImages: Error updating car with image', updateError);
+      } else {
+        console.log('AddImages: Car updated with image. Updated data:', updateData);
+      }
+    } catch (error) {
+      console.error('AddImages: Error processing file', error);
+    }
+  };
 
   const handleCameraSave = async (imageData, action) => {
     console.log('AddImages: Camera save with action:', action, 'carId:', addingImagesToCarId, 'userId:', user?.id);
@@ -127,12 +211,26 @@ const AddImages = () => {
             </svg>
           </button>
         </div>
-        <Camera
-          carId={addingImagesToCarId}
-          userId={user?.id}
-          onSave={handleCameraSave}
-          onCancel={handleCancel}
-        />
+        {mode === 'upload' ? (
+          <div className="upload-content">
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleFileUpload}
+              className="file-input"
+              disabled={uploading}
+            />
+            <p className="upload-hint">{uploading ? 'Uploading...' : 'Select or drop images to upload'}</p>
+          </div>
+        ) : (
+          <Camera
+            carId={addingImagesToCarId}
+            userId={user?.id}
+            onSave={handleCameraSave}
+            onCancel={handleCancel}
+          />
+        )}
       </div>
     </div>
   );

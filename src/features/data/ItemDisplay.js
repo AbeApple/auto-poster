@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setViewingImageId, setAddingImagesToCarId, setDeletingImage, setSelectedCarData, triggerRefresh } from '../../global/redux/slices/DisplaySlice';
+import { setViewingImageId, setAddingImagesToCarId, setDeletingImage, setSelectedCarData, triggerRefresh, setImageSourceMode } from '../../global/redux/slices/DisplaySlice';
 import { supabase } from '../../global/supabase/Client';
 import AutoSaveInput from '../../util/AutoSaveInput';
 import Confirm from '../../util/Confirm';
+import ImageSourceDialog from '../../util/ImageSourceDialog';
 import './ItemDisplay.css';
 
 const ItemDisplay = () => {
@@ -14,6 +15,7 @@ const ItemDisplay = () => {
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({});
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showImageSourceDialog, setShowImageSourceDialog] = useState(false);
 
   console.log('ItemDisplay: selectedCarData:', selectedCarData);
 
@@ -76,8 +78,24 @@ const ItemDisplay = () => {
   };
 
   const handleAddImages = () => {
-    console.log('ItemDisplay: Opening add images for car:', selectedCarData?.id);
+    console.log('ItemDisplay: Opening image source dialog for car:', selectedCarData?.id);
+    setShowImageSourceDialog(true);
+  };
+
+  const handleImageSourceUpload = () => {
+    console.log('ItemDisplay: User selected upload option');
+    setShowImageSourceDialog(false);
     dispatch(setAddingImagesToCarId(selectedCarData?.id));
+    dispatch(setImageSourceMode('upload'));
+    console.log('ItemDisplay: Set imageSourceMode to upload');
+  };
+
+  const handleImageSourceCamera = () => {
+    console.log('ItemDisplay: User selected camera option');
+    setShowImageSourceDialog(false);
+    dispatch(setAddingImagesToCarId(selectedCarData?.id));
+    dispatch(setImageSourceMode('camera'));
+    console.log('ItemDisplay: Set imageSourceMode to camera');
   };
 
   const handleDeleteImage = (imageUrl) => {
@@ -364,6 +382,14 @@ const ItemDisplay = () => {
                 message="Are you sure you want to delete this record?"
                 onConfirm={handleDeleteRecord}
                 onCancel={() => setShowDeleteConfirm(false)}
+              />
+            )}
+            {showImageSourceDialog && (
+              <ImageSourceDialog
+                isOpen={showImageSourceDialog}
+                onUpload={handleImageSourceUpload}
+                onCamera={handleImageSourceCamera}
+                onCancel={() => setShowImageSourceDialog(false)}
               />
             )}
           </div>

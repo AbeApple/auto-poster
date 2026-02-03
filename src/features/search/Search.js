@@ -26,6 +26,7 @@ const Search = () => {
   const creatingNew = useSelector(state => state.display.creatingNew);
   const selectedCarData = useSelector(state => state.display.selectedCarData);
   const refreshTrigger = useSelector(state => state.display.refreshTrigger);
+  const user = useSelector(state => state.user.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -34,9 +35,16 @@ const Search = () => {
 
   const loadCars = async () => {
     console.log('Search: Loading cars from database');
+    if (!user) {
+      console.log('Search: No user logged in');
+      setCars([]);
+      setLoading(false);
+      return;
+    }
     const { data, error } = await supabase
       .from('cars')
       .select('*')
+      .eq('user_id', user.id)
       .order('created_at', { ascending: false });
     
     if (error) {
@@ -53,6 +61,13 @@ const Search = () => {
     console.log('Search: Performing search for', searchTerm);
     setLoading(true);
     
+    if (!user) {
+      console.log('Search: No user logged in');
+      setCars([]);
+      setLoading(false);
+      return;
+    }
+    
     if (!searchTerm.trim()) {
       await loadCars();
       return;
@@ -61,6 +76,7 @@ const Search = () => {
     const { data, error } = await supabase
       .from('cars')
       .select('*')
+      .eq('user_id', user.id)
       .or(`make.ilike.%${searchTerm}%,registration.ilike.%${searchTerm}%,model.ilike.%${searchTerm}%`)
       .order('created_at', { ascending: false });
     

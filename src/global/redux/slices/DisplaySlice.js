@@ -8,6 +8,7 @@ const initialState = {
   viewingImageId: null,
   addingImagesToCarId: null,
   deletingImage: null,
+  imageSourceMode: null,
 };
 
 const displaySliceReducer = createSlice({
@@ -35,8 +36,11 @@ const displaySliceReducer = createSlice({
     setSelectedCarData: (state, action) => {
       state.selectedCarData = action.payload;
     },
+    setImageSourceMode: (state, action) => {
+      state.imageSourceMode = action.payload;
+    },
   },
 });
 
-export const { setCreatingNew, setTopMenuOpen, triggerRefresh, setViewingImageId, setAddingImagesToCarId, setDeletingImage, setSelectedCarData } = displaySliceReducer.actions;
+export const { setCreatingNew, setTopMenuOpen, triggerRefresh, setViewingImageId, setAddingImagesToCarId, setDeletingImage, setSelectedCarData, setImageSourceMode } = displaySliceReducer.actions;
 export default displaySliceReducer.reducer;
