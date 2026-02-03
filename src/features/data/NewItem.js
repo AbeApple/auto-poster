@@ -13,8 +13,11 @@ const NewItem = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
 
-  const handleCancel = () => {
+  const handleCancel = async () => {
     console.log('NewItem: Cancel clicked');
+    if (carId) {
+      dispatch(setSelectedCarData({id: carId}));
+    }
     dispatch(setCreatingNew(false));
   };
 
@@ -157,8 +160,11 @@ const NewItem = () => {
     }
   };
 
-  const handleCameraCancel = () => {
+  const handleCameraCancel = async () => {
     console.log('NewItem: Camera cancel');
+    if (carId) {
+      dispatch(setSelectedCarData({id: carId}));
+    }
     dispatch(setCreatingNew(false));
     dispatch(triggerRefresh());
   };

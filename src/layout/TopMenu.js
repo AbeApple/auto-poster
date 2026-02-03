@@ -36,6 +36,9 @@ const TopMenu = () => {
           </button>
         </div>
         <div className="top-menu-items">
+          <button className="top-menu-item" onClick={() => { navigate('/'); handleClose(); }}>
+            Home
+          </button>
           <button className="top-menu-item" onClick={() => { navigate('/search'); handleClose(); }}>
             Search
           </button>

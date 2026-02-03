@@ -62,6 +62,20 @@ const ItemDisplay = () => {
       console.log('ItemDisplay: Loaded car', data);
       console.log('ItemDisplay: Car images:', data.images);
       setCar(data);
+      // Update form data with full car details
+      setFormData({
+        registration: data.registration || '',
+        make: data.make || '',
+        model: data.model || '',
+        year: data.year || '',
+        color: data.color || '',
+        miles: data.miles || '',
+        price: data.price || '',
+        fuel_type: data.fuel_type || '',
+        transmission: data.transmission || '',
+        description: data.description || '',
+        note: data.note || '',
+      });
     }
     setLoading(false);
   };

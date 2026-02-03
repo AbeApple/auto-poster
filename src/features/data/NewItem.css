@@ -72,6 +72,22 @@
   display: flex;
   gap: 1rem;
   justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.new-item-buttons button {
+  flex: 1;
+  min-width: 120px;
+}
+
+@media (max-width: 400px) {
+  .new-item-buttons {
+    flex-direction: column-reverse;
+  }
+
+  .new-item-buttons button {
+    width: 100%;
+  }
 }
 
 .new-item-message {
@@ -109,7 +125,9 @@
   transition: background 0.3s;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
+  text-align: center;
 }
 
 .create-button:hover {

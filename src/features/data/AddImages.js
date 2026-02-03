@@ -23,10 +23,9 @@ const AddImages = () => {
     console.log('AddImages: Processing file upload:', files.length, 'files');
     setUploading(true);
 
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      await uploadImage(file);
-    }
+    // Upload all files in parallel for better performance
+    const uploadPromises = Array.from(files).map(file => uploadImage(file));
+    await Promise.all(uploadPromises);
 
     setUploading(false);
     dispatch(setAddingImagesToCarId(null));
@@ -184,6 +183,7 @@ const AddImages = () => {
   const handleCancel = () => {
     console.log('AddImages: Cancelled');
     dispatch(setAddingImagesToCarId(null));
+    // Ensure detail view stays visible by not clearing selectedCarData
   };
 
   if (!addingImagesToCarId) {

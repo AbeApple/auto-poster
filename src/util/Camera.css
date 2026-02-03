@@ -46,6 +46,35 @@
   justify-content: center;
 }
 
+.camera-exit-button {
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  background: rgba(255, 0, 0, 0.8);
+  border: 2px solid #ff0000;
+  color: #ffffff;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  flex-shrink: 0;
+}
+
+.camera-exit-button:hover {
+  background: rgba(255, 0, 0, 1);
+}
+
+.camera-center-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
 .camera-actions {
   display: flex;
   gap: 0.5rem;
